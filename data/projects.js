@@ -10,9 +10,9 @@ export const projects = [
     area: "450,000 Sq Ft",
     client: "Horizon Corp",
     images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop", // Exterior: Wide shot of a tall, modern glass skyscraper against a bright blue sky.
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop", // Interior: Luxury corporate lobby with marble floors and natural sunlight.
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000&auto=format&fit=crop"  // Detail: Close-up of modern geometric building facade or glass windows.
+      "/projects/the-lumina-tower.png", // Exterior: Wide shot of a tall, modern glass skyscraper against a bright blue sky.
+      "/projects/the-lumina-tower-interior.png", // Interior: Luxury corporate lobby with marble floors and natural sunlight.
+      "/projects/the-lumina-tower-detail.png"  // Detail: Close-up of modern geometric building facade or glass windows.
     ]
   },
   {
@@ -26,8 +26,8 @@ export const projects = [
     area: "120,000 Sq Ft",
     client: "Private Investors",
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2000&auto=format&fit=crop", // Exterior: Modern, boxy luxury villa with a swimming pool and clean white walls.
-      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop"  // Interior: High-end minimalist living room with large glass sliding doors.
+      "/projects/serenity-villas.png", // Exterior: Modern, boxy luxury villa with a swimming pool and clean white walls.
+      "/projects/serenity-villas-interior.png"  // Interior: High-end minimalist living room with large glass sliding doors.
     ]
   },
   {
@@ -41,8 +41,8 @@ export const projects = [
     area: "850,000 Sq Ft",
     client: "Apex Logistics",
     images: [
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2000&auto=format&fit=crop", // Exterior: Large scale warehouse/factory building, preferably with delivery bays.
-      "https://images.unsplash.com/photo-1504307651254-35680f356f27?q=80&w=2000&auto=format&fit=crop"  // On-site: Construction workers or heavy yellow machinery (cranes/bulldozers) working.
+      "/projects/apex-industrial-hub.png", // Exterior: Large scale warehouse/factory building, preferably with delivery bays.
+      "/projects/apex-industrial-hub-detail.png"  // On-site: Construction workers or heavy yellow machinery (cranes/bulldozers) working.
     ]
   },
   {
@@ -56,8 +56,8 @@ export const projects = [
     area: "1,200,000 Sq Ft",
     client: "Vertex Holdings",
     images: [
-      "https://images.unsplash.com/photo-1497215842964-222b430dc094?q=80&w=2000&auto=format&fit=crop", // Exterior: Modern tech-park campus with multiple low-rise glass buildings and trees.
-      "https://images.unsplash.com/photo-1416331108676-a22ccb276e35?q=80&w=2000&auto=format&fit=crop"  // Interior: Open-plan tech office workspace with modern furniture and lighting.
+      "/projects/nexus-tech-park.png", // Exterior: Modern tech-park campus with multiple low-rise glass buildings and trees.
+      "/projects/nexus-tech-park-interior.png"  // Interior: Open-plan tech office workspace with modern furniture and lighting.
     ]
   },
   {
@@ -71,8 +71,8 @@ export const projects = [
     area: "65,000 Sq Ft",
     client: "Royal Hospitality Group",
     images: [
-      "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=2000&auto=format&fit=crop", // Exterior: Classic Indian heritage architecture (arches, sandstone) but looking clean/restored.
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop"  // Interior: Luxury hotel room blending modern amenities with traditional design elements.
+      "/projects/heritage-palace-restoration.png", // Exterior: Classic Indian heritage architecture (arches, sandstone) but looking clean/restored.
+      "/projects/heritage-palace-restoration-interior.png"  // Interior: Luxury hotel room blending modern amenities with traditional design elements.
     ]
   },
   {
@@ -86,8 +86,8 @@ export const projects = [
     area: "320,000 Sq Ft",
     client: "Zenith Designs",
     images: [
-      "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop", // Exterior: Bright, modern outdoor shopping mall or plaza with people and sunlight.
-      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2000&auto=format&fit=crop"  // Interior/Detail: High-end cafe or boutique store exterior within the plaza.
+      "/projects/oasis-retail-pavilion.png", // Exterior: Bright, modern outdoor shopping mall or plaza with people and sunlight.
+      "/ projects/oasis-retail-pavilion-interior.png"  // Interior/Detail: High-end cafe or boutique store exterior within the plaza.
     ]
   },
   {
@@ -101,8 +101,8 @@ export const projects = [
     area: "2.5 km Span",
     client: "State Infrastructure Board",
     images: [
-      "https://images.unsplash.com/photo-1513346940221-6f673d962e97?q=80&w=2000&auto=format&fit=crop", // Wide shot: A massive, modern cable-stayed bridge over water or a highway.
-      "https://images.unsplash.com/photo-1545625032-159d3e86c8f3?q=80&w=2000&auto=format&fit=crop"  // On-site: Close up of steel cables, concrete pillars, or heavy construction engineering.
+      "/projects/gulf-stream-bridge.png", // Wide shot: A massive, modern cable-stayed bridge over water or a highway.
+      "/projects/gulf-stream-bridge-detail.png"  // On-site: Close up of steel cables, concrete pillars, or heavy construction engineering.
     ]
   }
 ];

@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { gsap } from '@/lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
-// 100% Bulletproof GSAP Counter Component
-const Counter = ({ from = 0, to, suffix = "" }) => {
+// Optimized GSAP Counter Component
+const Counter = ({ from = 0, to }) => {
   const nodeRef = useRef(null);
 
   useEffect(() => {
-    // Ek dummy object banayenge jisko hum animate karenge 0 se target number tak
+    gsap.registerPlugin(ScrollTrigger);
+    
     const counterObj = { val: from };
 
     const ctx = gsap.context(() => {
@@ -18,65 +20,82 @@ const Counter = ({ from = 0, to, suffix = "" }) => {
         ease: "power3.out",
         scrollTrigger: {
           trigger: nodeRef.current,
-          start: "top 90%", // Jab element thoda sa screen mein aayega tabhi count shuru hoga
+          start: "top 90%", 
         },
         onUpdate: () => {
           if (nodeRef.current) {
-            // Har frame par text ko update karega Math.floor() ke sath taaki decimals na aayein
-            nodeRef.current.textContent = Math.floor(counterObj.val) + suffix;
+            // Sirf number update hoga, suffix humne bahar nikal diya hai styling ke liye
+            nodeRef.current.textContent = Math.floor(counterObj.val);
           }
         }
       });
     });
 
     return () => ctx.revert();
-  }, [from, to, suffix]);
+  }, [from, to]);
 
-  // Initial render par 'from' value dikhegi
-  return <span ref={nodeRef} className="font-syne font-black">{from}{suffix}</span>;
+  return <span ref={nodeRef}>{from}</span>;
 };
 
 export default function Stats() {
+  const sectionRef = useRef(null);
+
   const stats = [
     { label: "Projects Delivered", value: 250, suffix: "+" },
-    { label: "Years Excellence", value: 15, suffix: "+" },
+    { label: "Years of Excellence", value: 15, suffix: "+" },
     { label: "Industry Awards", value: 40, suffix: "+" },
     { label: "Client Satisfaction", value: 100, suffix: "%" },
   ];
 
+  // Container fade-up animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(sectionRef.current, 
+        { y: 40, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 85%"
+          }
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
-    // Fixed background attachment gives a beautiful premium Parallax effect on scroll
-    <section className="relative py-24 md:py-32 bg-dark overflow-hidden bg-fixed bg-center bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2500&auto=format&fit=crop')" }}>
-      
-      {/* Absolute overlay to darken the background image perfectly */}
-      <div className="absolute inset-0 bg-dark/90 mix-blend-multiply z-0"></div>
-      
-      {/* Decorative Grid Lines Overlay (Subtle Blueprint vibe) */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-size-[40px_40px] z-0"></div>
-
-      <div className="container mx-auto px-6 md:px-12 relative z-10">
+    <section className="py-12 md:py-20 bg-white">
+      <div className="container mx-auto px-6 md:px-12">
         
-        {/* Stats Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-y sm:divide-y-0 lg:divide-x divide-white/10">
-          {stats.map((stat, index) => (
-            <div key={index} className="flex flex-col items-center justify-center pt-8 sm:pt-0">
-              
-              {/* The Animated Number */}
-              <h3 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white drop-shadow-md">
-                <Counter from={0} to={stat.value} suffix={stat.suffix} />
-              </h3>
-              
-              {/* The Label */}
-              <div className="flex flex-col items-center">
-                {/* Small Yellow Accent Line */}
-                <span className="w-8 h-0.5 bg-accent mb-4"></span>
-                <p className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-white/70 text-center">
-                  {stat.label}
-                </p>
-              </div>
+        {/* Soft Premium Container */}
+        <div ref={sectionRef} className="bg-[#FFF8F5] rounded-[2.5rem] md:rounded-[3rem] p-10 md:p-16 lg:p-20 shadow-sm border border-orange-50/50">
+          
+          {/* Stats Grid Layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-y sm:divide-y-0 lg:divide-x divide-gray-200/60">
+            {stats.map((stat, index) => (
+              <div key={index} className="flex flex-col items-center justify-center pt-8 sm:pt-0 first:pt-0">
+                
+                {/* The Animated Number + Styled Suffix */}
+                <h3 className="text-5xl md:text-6xl font-bold text-gray-900 mb-3 flex items-center">
+                  <Counter from={0} to={stat.value} />
+                  <span className="text-[#FF5E14] ml-1">{stat.suffix}</span>
+                </h3>
+                
+                {/* The Clean Label */}
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-sm md:text-base font-medium text-gray-500">
+                    {stat.label}
+                  </p>
+                </div>
 
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
+
         </div>
 
       </div>

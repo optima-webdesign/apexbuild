@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiStar } from 'react-icons/fi';
 
-// Premium dummy data with detailed reviews
 const premiumTestimonials = [
   {
     name: "Vikram Singhania",
@@ -38,46 +36,41 @@ export default function Testimonials() {
   const duplicatedTestimonials = [...premiumTestimonials, ...premiumTestimonials, ...premiumTestimonials];
 
   return (
-    <section className="py-24 md:py-32 bg-light overflow-hidden border-t border-dark/5">
+    <section className="py-20 md:py-32 bg-[#FDFDFD] overflow-hidden">
       
-      {/* 1. EDITORIAL SECTION HEADER */}
-      <div className="container mx-auto px-6 md:px-12 mb-20 md:mb-28 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+      {/* 1. CLEAN SECTION HEADER */}
+      <div className="container mx-auto px-6 md:px-12 mb-16 md:mb-24 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="w-10 h-0.5 bg-accent"></span>
-            <span className="text-dark font-bold uppercase tracking-[0.2em] text-xs">
-              Client Success Stories
-            </span>
-          </div>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black font-syne uppercase tracking-tighter text-dark leading-[0.95]">
-            Built on <br />
-            <span className="text-accent">Trust.</span>
+          <p className="text-gray-500 font-medium text-sm md:text-base mb-3">
+            Client Success Stories
+          </p>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1]">
+            Built on Trust.
           </h2>
         </div>
         <div className="md:max-w-sm">
-          <p className="text-dark/60 text-lg leading-relaxed font-medium">
-            Don&apos;t just take our word for it. Hear from the visionaries, leaders, and families who trusted us to engineer their legacies.
+          <p className="text-gray-500 text-base md:text-lg leading-relaxed font-medium">
+            Don&apos;t just take our word for it. Hear from the visionaries, leaders, and families who trusted us to build their dreams.
           </p>
         </div>
       </div>
 
-      {/* 2. THE GRAND SINGLE-ROW SLIDER */}
-      <div className="relative w-full overflow-hidden group/sliders">
+      {/* 2. INFINITE SCROLLING SLIDER */}
+      <div className="relative w-full overflow-hidden py-10">
         
-        {/* Cinematic Fading Edges */}
-        <div className="absolute top-0 left-0 w-16 md:w-64 h-full bg-linear-to-r from-light to-transparent z-10 pointer-events-none" />
-        <div className="absolute top-0 right-0 w-16 md:w-64 h-full bg-linear-to-l from-light to-transparent z-10 pointer-events-none" />
+        {/* Soft Fading Edges for the Premium Look */}
+        <div className="absolute top-0 left-0 w-20 md:w-64 h-full bg-linear-to-r from-[#FDFDFD] to-transparent z-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-20 md:w-64 h-full bg-linear-to-l from-[#FDFDFD] to-transparent z-10 pointer-events-none" />
 
         {/* The Infinite Track */}
         <motion.div
-          className="flex gap-8 md:gap-12 w-max px-4 md:px-8"
+          className="flex gap-6 md:gap-8 w-max px-4"
           animate={{ x: ['0%', '-33.333333%'] }} // Adjusted for 3 exact copies
           transition={{
             ease: 'linear',
-            duration: 40, // Nice, slow, premium panning speed
+            duration: 50, // Slowed down slightly for better readability
             repeat: Infinity,
           }}
-          // Pauses perfectly when a user hovers to read
           whileHover={{ animationPlayState: "paused" }} 
         >
           {duplicatedTestimonials.map((testimonial, index) => (
@@ -90,45 +83,42 @@ export default function Testimonials() {
   );
 }
 
-// 3. WIDE, PREMIUM CARD COMPONENT
+// 3. SOFT PREMIUM CARD COMPONENT
 function TestimonialCard({ testimonial }) {
   return (
-    // Width increased to 500px for desktop to make it look like a feature quote, not a tiny widget
-    <div className="w-[85vw] sm:w-100 md:w-125 shrink-0 bg-white p-10 md:p-14 border border-dark/5 hover:border-accent shadow-sm hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] transition-all duration-500 relative group cursor-grab active:cursor-grabbing flex flex-col justify-between">
+    <div className="w-[85vw] sm:w-100 md:w-120 shrink-0 bg-white p-8 md:p-12 rounded-4xl md:rounded-[2.5rem] border border-gray-100 hover:border-orange-50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(255,94,20,0.08)] hover:-translate-y-2 transition-all duration-500 relative flex flex-col justify-between group">
       
-      {/* Top Accent Line */}
-      <div className="absolute top-0 left-0 w-0 h-1 bg-accent group-hover:w-full transition-all duration-500 ease-out" />
-
       <div>
-        {/* Modern Minimal Star Ratings */}
-        <div className="flex gap-1.5 text-accent mb-8">
+        {/* Star Ratings */}
+        <div className="flex gap-1.5 text-[#FF5E14] mb-6 md:mb-8">
           {[...Array(5)].map((_, i) => (
             <FiStar key={i} size={18} fill="currentColor" strokeWidth={0} />
           ))}
         </div>
         
-        {/* Review Text (Larger Typography) */}
-        <p className="text-dark/80 text-lg md:text-xl leading-relaxed mb-12 font-medium">
+        {/* Review Text */}
+        <p className="text-gray-600 text-lg md:text-[22px] leading-relaxed mb-10 font-medium">
           &quot;{testimonial.review}&quot;
         </p>
       </div>
       
       {/* Client Info */}
-      <div className="border-t border-dark/10 pt-6 flex items-center justify-between relative z-10">
+      <div className="flex items-center gap-4 relative z-10 mt-auto">
+        {/* User Initial Avatar */}
+        <div className="w-12 h-12 rounded-full bg-[#FFF8F5] text-[#FF5E14] flex items-center justify-center font-bold text-xl border border-orange-100">
+          {testimonial.name.charAt(0)}
+        </div>
+        
         <div>
-          <h4 className="font-syne font-bold text-xl md:text-2xl text-dark uppercase tracking-wide mb-1">
+          <h4 className="font-bold text-lg md:text-xl text-gray-900 leading-tight">
             {testimonial.name}
           </h4>
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-dark/40">
+          <p className="text-sm font-medium text-gray-500">
             {testimonial.role}
           </p>
         </div>
       </div>
       
-      {/* Massive Background Quote Mark */}
-      <div className="absolute -bottom-10 right-4 text-[12rem] text-dark/2 font-syne leading-none select-none z-0 pointer-events-none group-hover:text-accent/5 transition-colors duration-500">
-        &quot;
-      </div>
     </div>
   );
 }

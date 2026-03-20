@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { gsap } from '@/lib/gsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 
 export default function CTA() {
@@ -11,38 +12,38 @@ export default function CTA() {
   const textRef = useRef(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
-      // 1. Massive Card Reveal (Slides up and fades in)
+      // 1. Soft Card Slide up and fade in
       gsap.fromTo(cardRef.current,
-        { y: 80, opacity: 0 },
+        { y: 60, opacity: 0 },
         {
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 80%",
-            toggleActions: "play none none reverse"
           },
           y: 0,
           opacity: 1,
-          duration: 1.2,
-          ease: "power4.out"
+          duration: 1,
+          ease: "power3.out"
         }
       );
 
       // 2. Inner Text and Button Reveal
       gsap.fromTo(textRef.current.children,
-        { y: 40, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse"
+            start: "top 75%",
           },
           y: 0,
           opacity: 1,
-          duration: 1,
+          duration: 0.8,
           stagger: 0.15,
-          delay: 0.3,
-          ease: "power3.out"
+          delay: 0.2,
+          ease: "power2.out"
         }
       );
     }, containerRef);
@@ -51,79 +52,75 @@ export default function CTA() {
   }, []);
 
   return (
-    // Outer container keeps the light theme flow
-    <section ref={containerRef} className="py-24 md:py-32 bg-white">
+    <section ref={containerRef} className="py-20 md:py-32 bg-white">
       <div className="container mx-auto px-6 md:px-12">
         
-        {/* THE MONOLITH CARD */}
+        {/* THE SOFT ROUNDED CTA CARD */}
         <div 
           ref={cardRef} 
-          className="relative bg-dark w-full overflow-hidden flex flex-col lg:flex-row items-center justify-between p-10 sm:p-16 md:p-24 opacity-0 border-l-8 border-accent shadow-2xl"
+          className="relative bg-[#FFF8F5] w-full overflow-hidden rounded-[2.5rem] md:rounded-[3rem] p-12 sm:p-16 md:p-24 shadow-sm border border-orange-50/50 flex flex-col items-center justify-center text-center opacity-0"
         >
           
-          {/* ARCHITECTURAL BACKGROUND ELEMENTS */}
-          {/* 1. Subtle Blueprint Grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] z-0 pointer-events-none" style={{ backgroundSize: '40px 40px' }} />
-          
-          {/* 2. Geometric Accent Square (Top Right) */}
-          <div className="absolute -top-32 -right-32 w-64 h-64 border-40 border-white/5 z-0 pointer-events-none" />
-          
-          {/* 3. Construction Crosshairs */}
-          <div className="absolute top-10 right-10 w-8 h-8 flex items-center justify-center opacity-20 z-0 pointer-events-none">
-            <div className="w-full h-px bg-white absolute" />
-            <div className="h-full w-px bg-white absolute" />
-          </div>
+          {/* Subtle Decorative Elements (Optional light circles) */}
+          <div className="absolute -top-32 -left-32 w-64 h-64 bg-white/40 rounded-full blur-3xl z-0 pointer-events-none" />
+          <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-orange-100/30 rounded-full blur-3xl z-0 pointer-events-none" />
 
-          {/* LEFT: MASSIVE TYPOGRAPHY */}
-          <div ref={textRef} className="relative z-10 max-w-2xl lg:w-3/5 mb-16 lg:mb-0">
-            <div className="flex items-center gap-4 mb-6">
-              <span className="w-8 h-0.5 bg-accent"></span>
-              <span className="text-white/60 font-bold uppercase tracking-[0.2em] text-xs">
-                Start Your Journey
-              </span>
-            </div>
+          {/* MAIN CONTENT AREA */}
+          <div ref={textRef} className="relative z-10 max-w-3xl w-full flex flex-col items-center">
             
-            <h2 className="text-5xl md:text-6xl lg:text-[5.5rem] font-black font-syne uppercase tracking-tighter text-white mb-6 leading-[0.95]">
-              Ready to <br />
-              Build Your <br />
-              <span className="text-accent inline-block mt-2">Legacy?</span>
+            {/* Top Label */}
+            <p className="text-gray-500 font-medium text-sm md:text-base mb-4">
+              Start Your Journey
+            </p>
+            
+            {/* Main Heading */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-6">
+              Ready to Build Your <br className="hidden md:block" />
+              Dream Project?
             </h2>
             
-            <p className="text-white/70 text-lg md:text-xl font-medium leading-relaxed max-w-lg mb-8">
-              Let&apos;s discuss your project requirements. Our engineering and design teams are ready to turn your architectural dreams into concrete reality.
+            {/* Description */}
+            {/* FIXED: Escaped the single quote here */}
+            <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-2xl mb-10">
+              Let&apos;s discuss your project requirements. Our engineering and design teams are ready to turn your architectural dreams into reality.
             </p>
 
             {/* Micro-trust indicators */}
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-white/50 text-sm font-bold uppercase tracking-widest">
-              <div className="flex items-center gap-2">
-                <FiCheckCircle className="text-accent" size={16} /> Free Consultation
+            <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8 text-gray-700 text-sm font-semibold mb-12">
+              <div className="flex items-center justify-center gap-2">
+                <FiCheckCircle className="text-[#FF5E14]" size={18} /> Free Consultation
               </div>
-              <div className="flex items-center gap-2">
-                <FiCheckCircle className="text-accent" size={16} /> Expert Blueprinting
+              <div className="flex items-center justify-center gap-2">
+                <FiCheckCircle className="text-[#FF5E14]" size={18} /> Expert Blueprinting
               </div>
             </div>
-          </div>
 
-          {/* RIGHT: BRUTALIST CTA BUTTON & CONTACT INFO */}
-          <div className="relative z-10 lg:w-2/5 flex flex-col items-start lg:items-end w-full">
-            <Link 
-              href="/contact" 
-              className="group relative flex items-center justify-center gap-4 bg-accent text-dark px-10 py-6 uppercase font-black tracking-wider text-sm w-full sm:w-auto overflow-hidden transition-all duration-300 shadow-[8px_8px_0px_rgba(255,255,255,0.1)] hover:shadow-[0px_0px_0px_rgba(255,255,255,0.1)] hover:translate-x-2 hover:translate-y-2"
-            >
-              {/* Button Background Slide Effect */}
-              <div className="absolute inset-0 w-0 bg-white transition-all duration-500 ease-out group-hover:w-full z-0" />
+            {/* CTA BUTTONS & CONTACT INFO */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto justify-center">
               
-              <span className="relative z-10 group-hover:text-dark transition-colors duration-300">
+              <Link 
+                href="/contact" 
+                style={{ backgroundColor: '#FF5E14', color: '#FFFFFF' }}
+                className="group flex items-center justify-center gap-3 px-10 py-4 rounded-full font-semibold tracking-wide text-sm md:text-base w-full sm:w-auto transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1"
+              >
                 Request A Quote
-              </span>
-              <FiArrowRight size={22} className="relative z-10 transform group-hover:translate-x-2 transition-transform duration-300 group-hover:text-dark" />
-            </Link>
+                <FiArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
 
-            {/* Sub-text for button */}
-            <p className="text-white/40 text-xs font-bold uppercase tracking-widest mt-6 text-center lg:text-right w-full sm:w-auto">
-              Or call us directly at <br className="hidden lg:block" />
-              <span className="text-white mt-1 inline-block">+91 98765 43210</span>
-            </p>
+              {/* Quick Call Link */}
+              <div className="text-center sm:text-left">
+                <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">
+                  Or call us directly
+                </p>
+                <a 
+                  href="tel:+919876543210" 
+                  className="text-gray-900 font-bold text-lg hover:text-[#FF5E14] transition-colors"
+                >
+                  +91 98765 43210
+                </a>
+              </div>
+
+            </div>
           </div>
 
         </div>

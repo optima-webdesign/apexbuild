@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import clsx from 'clsx';
 
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
   { name: 'Services', path: '/services' },
   { name: 'Projects', path: '/projects' },
+  { name: 'Blog', path: '/blog' },
 ];
 
 export default function Navbar() {
@@ -18,174 +18,136 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Check if we are on the homepage. Only the homepage has the dark full-screen hero image at the top.
-  const isHome = pathname === '/';
-
-  // Scroll event listener
+  // Handle scroll detection
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
-    // Trigger once on mount to handle reloads midway down the page
-    handleScroll();
+    handleScroll(); // Trigger on mount
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
+  // Prevent body scroll on mobile menu
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
-  // LOGIC FOR COLORS:
-  // - If Mobile Menu is Open: ALWAYS Dark Text / White BG
-  // - If Not on Homepage: ALWAYS Dark Text / White BG (Scrolled or not)
-  // - If On Homepage AND Scrolled: Dark Text / White BG
-  // - If On Homepage AND Not Scrolled (Top): White Text / Transparent BG
-  
-  const forceDarkTheme = isMobileMenuOpen || !isHome || isScrolled;
-
-  const headerClasses = clsx(
-    'fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-out',
-    forceDarkTheme
-      ? 'bg-white/95 backdrop-blur-md py-4 shadow-[0_4px_30px_rgba(0,0,0,0.04)] border-b border-dark/5' 
-      : 'bg-transparent py-6 lg:py-8'
-  );
-
-  const textColorClass = forceDarkTheme ? 'text-dark' : 'text-white';
-  const buttonClass = forceDarkTheme 
-    ? 'bg-dark text-white hover:bg-accent hover:text-dark border-transparent' 
-    : 'bg-white text-dark hover:bg-accent hover:text-dark border-white hover:border-accent';
-  const hamburgerLineClass = forceDarkTheme ? 'bg-dark' : 'bg-white';
+  const isHome = pathname === '/';
+  // Text darkens if we scroll, if we open mobile menu, or if we aren't on the homepage
+  const isDarkTheme = isScrolled || !isHome || isMobileMenuOpen;
 
   return (
     <>
-      <header className={headerClasses}>
-        <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
+      <header
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
+          isScrolled ? 'bg-white/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6 lg:py-8'
+        }`}
+      >
+        <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center relative">
           
-          {/* 1. BRAND LOGO */}
+          {/* 1. BRAND LOGO (Now Soft & Circular) */}
           <Link 
             href="/" 
             onClick={() => setIsMobileMenuOpen(false)}
-            className={clsx(
-              "text-2xl md:text-3xl font-black tracking-tighter uppercase font-syne relative z-50 transition-colors duration-300",
-              textColorClass
-            )}
+            className="flex items-center gap-3 z-50 group"
           >
-            Apex<span className="text-accent">Build.</span>
+            <div className="w-10 h-10 bg-[#FF5E14] rounded-full flex items-center justify-center transform group-hover:scale-105 transition-transform shadow-md">
+              <span className="text-white font-black text-xl leading-none tracking-tighter">A</span>
+            </div>
+            <span className={`text-2xl font-bold tracking-tight transition-colors ${
+              isDarkTheme ? 'text-gray-900' : 'text-white'
+            }`}>
+              ApexBuild.
+            </span>
           </Link>
 
-          {/* 2. DESKTOP NAVIGATION */}
-          <nav className="hidden lg:flex gap-8 lg:gap-10 items-center">
+          {/* 2. DESKTOP NAVIGATION (Centered with Premium Dot Indicator) */}
+          <nav className="hidden lg:flex gap-10 items-center absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => {
               const isActive = pathname === link.path;
               return (
                 <Link
                   key={link.name}
                   href={link.path}
-                  className={clsx(
-                    "text-xs font-bold uppercase tracking-[0.15em] transition-colors duration-300 hover:text-accent relative group",
-                    isActive ? "text-accent opacity-100" : `${textColorClass} opacity-80 hover:opacity-100`
-                  )}
+                  className={`text-[15px] font-semibold transition-colors duration-200 relative group ${
+                    isActive 
+                      ? 'text-[#FF5E14]' 
+                      : isDarkTheme ? 'text-gray-600 hover:text-gray-900' : 'text-gray-200 hover:text-white'
+                  }`}
                 >
-                  <span>{link.name}</span>
-                  
-                  {/* Premium Active Tab Indicator */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="absolute -bottom-2 left-0 right-0 h-0.5 bg-accent"
-                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    />
-                  )}
+                  {link.name}
+                  {/* Subtle Dot Indicator instead of a heavy line */}
+                  <span 
+                    className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#FF5E14] transition-all duration-300 ${
+                      isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100'
+                    }`}
+                  ></span>
                 </Link>
               );
             })}
           </nav>
 
-          {/* 3. DESKTOP CTA BUTTON */}
-          <div className="hidden lg:flex items-center">
+          {/* 3. DESKTOP CTA BUTTON (Pill-shaped) */}
+          <div className="hidden lg:block z-50">
             <Link 
               href="/contact" 
-              className={clsx(
-                "px-6 lg:px-8 py-3.5 text-[10px] lg:text-xs font-bold uppercase tracking-widest transition-all duration-300 border",
-                buttonClass
-              )}
+              className="bg-[#FF5E14] hover:bg-[#e04f0d] text-white px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
-              Start A Project
+              Get a Quote
             </Link>
           </div>
 
-          {/* 4. CUSTOM ANIMATED HAMBURGER MENU (Mobile) */}
+          {/* 4. MOBILE HAMBURGER */}
           <button
-            className="lg:hidden relative z-50 w-8 h-6 flex flex-col justify-between items-end group focus:outline-none"
+            className="lg:hidden relative z-50 w-7 h-5 flex flex-col justify-between items-center focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle Menu"
           >
-            <span className={clsx(`h-0.5 transition-all duration-300 ease-out ${hamburgerLineClass}`, isMobileMenuOpen ? "w-8 rotate-45 translate-y-2.75" : "w-8")} />
-            <span className={clsx(`h-0.5 transition-all duration-300 ease-out ${hamburgerLineClass}`, isMobileMenuOpen ? "w-0 opacity-0" : "w-6 group-hover:w-8")} />
-            <span className={clsx(`h-0.5 transition-all duration-300 ease-out ${hamburgerLineClass}`, isMobileMenuOpen ? "w-8 -rotate-45 -translate-y-2.75" : "w-8")} />
+            <span className={`w-full h-0.5 rounded-full transition-all duration-300 origin-left ${isDarkTheme ? 'bg-gray-900' : 'bg-white'} ${isMobileMenuOpen ? 'rotate-45' : ''}`} />
+            <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isDarkTheme ? 'bg-gray-900' : 'bg-white'} ${isMobileMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`w-full h-0.5 rounded-full transition-all duration-300 origin-left ${isDarkTheme ? 'bg-gray-900' : 'bg-white'} ${isMobileMenuOpen ? '-rotate-45' : ''}`} />
           </button>
-
         </div>
       </header>
 
-      {/* 5. EDITORIAL FULLSCREEN MOBILE MENU */}
+      {/* 5. MOBILE MENU (Soft Dropdown) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%', transition: { delay: 0.2, duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 bg-white flex flex-col px-6 pt-32 pb-12 lg:hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="fixed inset-0 z-40 bg-[#FDFDFD] px-6 pt-32 pb-12 lg:hidden flex flex-col overflow-y-auto"
           >
-            {/* Staggered Links */}
-            <div className="flex flex-col gap-6 mt-10">
-              {[...navLinks, { name: 'Contact Us', path: '/contact' }].map((link, i) => (
-                <div key={link.name} className="overflow-hidden">
-                  <motion.div
-                    initial={{ y: '100%' }}
-                    animate={{ y: 0 }}
-                    exit={{ y: '100%', opacity: 0 }}
-                    transition={{ duration: 0.5, delay: i * 0.08, ease: [0.33, 1, 0.68, 1] }}
-                  >
-                    <Link
-                      href={link.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={clsx(
-                        'text-4xl sm:text-5xl font-syne font-black uppercase tracking-tighter block',
-                        pathname === link.path ? 'text-accent' : 'text-dark hover:text-accent transition-colors'
-                      )}
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                </div>
+            <div className="flex flex-col gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`text-3xl font-bold tracking-tight border-b border-gray-100 pb-4 ${
+                    pathname === link.path ? 'text-[#FF5E14]' : 'text-gray-900'
+                  }`}
+                >
+                  {link.name}
+                </Link>
               ))}
             </div>
 
-            {/* Bottom Contact Info */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="mt-auto border-t border-dark/10 pt-8"
-            >
-              <p className="text-dark/50 text-xs font-bold uppercase tracking-widest mb-4">
-                Get In Touch
-              </p>
-              <a href="mailto:hello@apexbuild.com" className="block text-dark font-syne font-bold text-lg mb-1">
-                hello@apexbuild.com
-              </a>
-              <a href="tel:+919876543210" className="block text-dark font-syne font-bold text-lg">
-                +91 98765 43210
-              </a>
-            </motion.div>
+            <div className="mt-10">
+              <Link 
+                href="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center bg-[#FF5E14] text-white py-4 rounded-full text-lg font-semibold shadow-md hover:shadow-lg transition-all"
+              >
+                Get a Quote
+              </Link>
+            </div>
+            
+            {/* Quick Contact Info in Mobile Menu */}
+            <div className="mt-auto pt-10">
+              <p className="text-gray-500 text-sm font-medium mb-2">Call us directly:</p>
+              <a href="tel:+919876543210" className="text-2xl font-bold text-gray-900">+91 98765 43210</a>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

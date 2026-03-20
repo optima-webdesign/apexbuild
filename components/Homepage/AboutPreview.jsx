@@ -3,156 +3,168 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { gsap } from '@/lib/gsap';
-import { FiArrowRight } from 'react-icons/fi';
+// GSAP from library
+import gsap from 'gsap'; 
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+// Small custom icons representing the ones in the image
+const IconBox = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 16V8C21 6.89543 20.1046 6 19 6H5C3.89543 6 3 6.89543 3 8V16C3 17.1046 3.89543 18 5 18H19C20.1046 18 21 17.1046 21 16Z" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 12L12 6" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8 12L8 6" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M16 12L16 6" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const IconBuilding = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 21H21" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M5 21V5C5 4.44772 5.44772 4 6 4H14C14.5523 4 15 4.44772 15 5V21" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M19 21V11C19 10.4477 18.5523 10 18 10H15" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 9H11" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 13H11" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9 17H11" stroke="#FF5E14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
 
 export default function AboutPreview() {
   const sectionRef = useRef(null);
-  const imageContainerRef = useRef(null);
   const textContentRef = useRef(null);
-  const badgeRef = useRef(null);
+  const imageRef = useRef(null);
+  const cardsRef = useRef(null);
 
   useEffect(() => {
+    // Register ScrollTrigger safely
+    gsap.registerPlugin(ScrollTrigger);
+
     const ctx = gsap.context(() => {
-      // 1. Premium Image Reveal (Bottom to Top Wipe)
-      gsap.fromTo(".image-mask", 
-        { clipPath: "inset(100% 0 0 0)" },
+      // Image fade and slight scale up
+      gsap.fromTo(imageRef.current,
+        { opacity: 0, scale: 0.95 },
         {
-          clipPath: "inset(0% 0 0 0)",
-          duration: 1.5,
-          ease: "power4.inOut",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          }
-        }
-      );
-
-      // Image Parallax Effect (Slight scale down & move)
-      gsap.fromTo(".about-image", 
-        { scale: 1.2, y: 30 },
-        {
+          opacity: 1,
           scale: 1,
-          y: 0,
-          duration: 1.5,
-          ease: "power3.out",
+          duration: 1.2,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 75%",
+            start: "top 70%",
           }
         }
       );
 
-      // 2. Black Experience Badge slides in
-      gsap.from(badgeRef.current, {
-        x: -50,
-        opacity: 0,
-        duration: 1,
-        delay: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        }
-      });
-
-      // 3. Text Content Reveal
+      // Text elements slide up
       gsap.from(textContentRef.current.children, {
-        y: 40,
+        y: 30,
         opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: textContentRef.current,
-          start: "top 75%",
+          start: "top 80%",
         }
       });
+
+      // Feature cards slide up from bottom
+      gsap.from(cardsRef.current.children, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        delay: 0.4,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: textContentRef.current, 
+          start: "top 80%",
+        }
+      });
+
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    // Background pure white for the light theme
-    <section ref={sectionRef} className="py-24 md:py-32 bg-white overflow-hidden border-b border-dark/5">
-      <div className="container mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+    <section ref={sectionRef} className="py-20 md:py-32 bg-white overflow-hidden">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           
-          {/* LEFT: Premium Architectural Image Section */}
-          <div className="relative pl-4 pt-4 md:pl-8 md:pt-8" ref={imageContainerRef}>
+          {/* LEFT: Text Content & Feature Cards */}
+          <div className="order-2 lg:order-1 flex flex-col justify-center">
             
-            {/* Geometric Yellow Accent Box (Behind Image) */}
-            <div className="absolute top-0 left-0 w-3/4 h-[90%] border-l-4 border-t-4 border-accent z-0" />
-            
-            {/* Image Mask Container */}
-            <div className="image-mask relative h-125 md:h-162.5 w-full z-10 bg-dark overflow-hidden shadow-2xl">
-              <Image
-                // Suggestion: A clean architectural shot with strong lines
-                src="/construction-site.png"
-                alt="Construction Site"
-                fill
-                className="about-image object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            
-            {/* Sharp Dark Experience Badge */}
-            <div 
-              ref={badgeRef} 
-              className="absolute -bottom-8 -left-4 md:-bottom-12 md:-left-8 bg-dark text-white p-8 md:p-10 z-20 shadow-xl border-b-4 border-accent flex items-center gap-6"
-            >
-              <p className="text-6xl md:text-7xl font-black font-syne text-accent leading-none">15</p>
+            {/* TEXT CONTENT WRAPPER */}
+            <div ref={textContentRef} className="mb-10">
+              
+              {/* Minimal Top Label */}
+              <p className="text-gray-500 font-medium text-sm md:text-base mb-4">
+                About Us
+              </p>
+              
+              {/* Main Heading */}
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-8">
+                Our Reputation is as Solid <br className="hidden md:block" />
+                as Concrete
+              </h2>
+              
+              {/* CTA BUTTON FIX: Wrapped in div & using inline style for guaranteed color */}
               <div>
-                <p className="text-sm font-bold uppercase tracking-[0.2em] leading-snug">Years Of <br/> Excellence</p>
+                <Link 
+                  href="/about" 
+                  style={{ backgroundColor: '#FF5E14', color: '#FFFFFF' }}
+                  className="inline-block px-8 py-3.5 rounded-full font-semibold transition-all duration-300 text-sm md:text-base shadow-md hover:shadow-lg hover:opacity-90"
+                >
+                  Learn More
+                </Link>
               </div>
+            </div>
+
+            {/* Feature Cards Grid */}
+            <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              
+              {/* Card 1 */}
+              <div className="bg-[#FFF8F5] p-8 rounded-3xl transition-transform hover:-translate-y-1 duration-300">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm border border-orange-100">
+                  <IconBox />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Results For You
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Bringing transparency, trust, and value to every property deal.
+                </p>
+              </div>
+
+              {/* Card 2 */}
+              <div className="bg-[#FFF8F5] p-8 rounded-3xl transition-transform hover:-translate-y-1 duration-300">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm border border-orange-100">
+                  <IconBuilding />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  Real Estate Gets Real
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed">
+                  Dedicated to delivering success and expectations in every transaction.
+                </p>
+              </div>
+
             </div>
           </div>
 
-          {/* RIGHT: Text Content (Clean & Editorial) */}
-          <div ref={textContentRef} className="pt-16 lg:pt-0">
-            
-            {/* Minimal Subheading */}
-            <div className="flex items-center gap-4 mb-6">
-              <span className="w-10 h-0.5 bg-accent"></span>
-              <span className="text-dark font-bold uppercase tracking-[0.2em] text-xs">
-                Who We Are
-              </span>
+          {/* RIGHT: Large Rounded Image */}
+          <div className="order-1 lg:order-2">
+            <div ref={imageRef} className="relative w-full aspect-square md:aspect-[4/5] lg:aspect-square overflow-hidden rounded-3xl shadow-xl bg-gray-100 border border-gray-100">
+              
+              <Image
+                src="/construction-site.png" 
+                alt="Construction Team"
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+              
             </div>
-            
-            {/* Main Heading */}
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-syne uppercase tracking-tight text-dark mb-8 leading-[1.05]">
-              Shaping skylines, <br />
-              Building <span className="text-accent">legacies.</span>
-            </h2>
-            
-            {/* Description */}
-            <p className="text-dark/70 text-lg mb-10 leading-relaxed font-medium">
-              We are a premier construction and architectural firm based in Ahmedabad. 
-              Our commitment to innovation, quality materials, and unparalleled engineering 
-              has made us the trusted choice for commercial and luxury residential projects.
-            </p>
-
-            {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 gap-8 mb-12 border-t border-dark/10 pt-10">
-              <div>
-                <p className="text-4xl md:text-5xl font-black text-dark font-syne mb-2">250<span className="text-accent">+</span></p>
-                <p className="text-xs font-bold text-dark/50 uppercase tracking-widest">Projects Completed</p>
-              </div>
-              <div>
-                <p className="text-4xl md:text-5xl font-black text-dark font-syne mb-2">100<span className="text-accent">%</span></p>
-                <p className="text-xs font-bold text-dark/50 uppercase tracking-widest">Client Satisfaction</p>
-              </div>
-            </div>
-
-            {/* Premium CTA Button */}
-            <Link 
-              href="/about" 
-              className="group inline-flex items-center gap-4 bg-dark text-white px-8 py-4 uppercase font-bold tracking-wider text-sm hover:bg-accent hover:text-dark transition-all duration-300"
-            >
-              Read Full Story
-              <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
-            </Link>
           </div>
 
         </div>

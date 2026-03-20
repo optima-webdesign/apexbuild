@@ -3,30 +3,40 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { gsap } from '@/lib/gsap';
-import { FiArrowRight } from 'react-icons/fi';
+import gsap from 'gsap'; 
+import { FiPhone } from 'react-icons/fi';
 
 export default function Hero() {
   const containerRef = useRef(null);
   const textContentRef = useRef(null);
   const imageRef = useRef(null);
+  const bottomBarRef = useRef(null);
 
   // GSAP Animation
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Image zooms in smoothly on load
+    let ctx = gsap.context(() => {
+      // Background Image smooth subtle zoom
       gsap.fromTo(imageRef.current, 
-        { scale: 1.1, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 2, ease: 'power3.out' }
+        { scale: 1.05 },
+        { scale: 1, duration: 2.5, ease: 'power2.out' }
       );
 
-      // Text elements slide up sequentially
+      // Hero Text & Buttons slide up
       gsap.from(textContentRef.current.children, {
-        y: 40,
+        y: 30,
         opacity: 0,
         duration: 1,
         stagger: 0.15,
-        delay: 0.5,
+        delay: 0.2,
+        ease: 'power3.out'
+      });
+
+      // Bottom Logo bar fade in
+      gsap.from(bottomBarRef.current, {
+        y: 20,
+        opacity: 0,
+        duration: 1,
+        delay: 0.8,
         ease: 'power3.out'
       });
     }, containerRef);
@@ -35,15 +45,15 @@ export default function Hero() {
   }, []);
 
   return (
-    // min-h-[100svh] ensures perfect full height on mobile browsers
-    <section ref={containerRef} className="relative min-h-[100svh] w-full overflow-hidden bg-black flex items-center pt-24 md:pt-0">
+    // FIX 1: Use min-h-svh for mobile browsers and flex column layout
+    <section ref={containerRef} className="relative min-h-svh w-full overflow-hidden flex flex-col justify-center">
       
-      {/* 1. THE FULL BACKGROUND IMAGE AREA */}
-      <div className="absolute inset-0 z-0 h-full w-full">
-        <div ref={imageRef} className="relative w-full h-full transform-gpu">
+      {/* BACKGROUND IMAGE */}
+      <div className="absolute inset-0 z-0 h-full w-full bg-[#1a1a1a]">
+        <div ref={imageRef} className="relative w-full h-full">
           <Image
-            src="/hero.png" // Aapki background image
-            alt="Modern Construction Engineering"
+            src="/hero.png" 
+            alt="Modern Construction Excavator"
             fill
             className="object-cover object-center"
             priority
@@ -51,54 +61,66 @@ export default function Hero() {
           />
         </div>
         
-        {/* 2. THE RESPONSIVE GRADIENT OVERLAYS (Fixed for Mobile & Desktop) */}
-        {/* Base dark layer for mobile readability */}
-        <div className="absolute inset-0 bg-black/40 md:bg-black/20 z-10" />
-        {/* Left to right gradient (Stronger on left for text) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-transparent z-10" />
-        {/* Bottom to top gradient ONLY for mobile, so the bottom buttons are visible */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent md:hidden z-10" />
+        {/* FIX 2: Better mobile gradient so white text is always readable */}
+        <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-black/30 z-10" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/20 to-transparent z-10 hidden md:block" />
       </div>
 
-      {/* 3. CONTENT AREA: Responsive Padding and Typography */}
-      <div className="container mx-auto px-6 md:px-12 relative z-20">
-        <div ref={textContentRef} className="max-w-3xl w-full text-white">
+      {/* MAIN CONTENT AREA */}
+      {/* FIX 3: Added pt-32 (safe area for navbar) and pb-40 (safe area for bottom logos) */}
+      <div className="container mx-auto px-6 md:px-12 relative z-20 pt-32 pb-40 md:py-0 flex flex-col justify-center grow">
+        <div ref={textContentRef} className="max-w-2xl w-full text-white mt-auto md:mt-0">
           
-          {/* Accent Line */}
-          <div className="w-10 md:w-12 h-1 bg-accent mb-6 md:mb-8"></div>
-
-          {/* EST Badge */}
-          <p className="text-white/70 font-bold uppercase tracking-[0.2em] text-[10px] md:text-xs mb-4 md:mb-6">
-            EST. 2010 • AHMEDABAD
-          </p>
-
-          {/* Heading - Adjusted font sizes for perfect wrapping on all screens */}
-          <h1 className="font-syne text-4xl sm:text-5xl md:text-6xl xl:text-[5rem] font-black uppercase tracking-tight leading-[1.05] mb-6 md:mb-8 break-words">
-            Shaping <br />
-            <span className="text-accent inline-block">Architectural</span> <br />
-            Legacies.
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] font-bold leading-[1.1] mb-6 tracking-tight drop-shadow-md">
+            Building the Shape <br className="hidden md:block" />
+            You&apos;ve Always Wanted
           </h1>
 
-          {/* Description */}
-          <p className="text-white/80 text-base md:text-lg lg:text-xl mb-8 md:mb-12 leading-relaxed max-w-2xl font-medium">
-            From heavy-duty industrial facilities to premium commercial spaces. We deliver uncompromising quality, on time, and within budget.
+          <p className="text-white/90 text-base md:text-lg mb-8 md:mb-10 leading-relaxed max-w-xl font-medium drop-shadow-md">
+            Construction is more than just bricks and mortar: it&apos;s about transforming ideas into reality. It&apos;s about creating spaces that inspire, connect, and uplift.
           </p>
 
-          {/* Action Buttons - Full width on mobile, inline on desktop */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto">
+          {/* Buttons: Stack on mobile, inline on desktop */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <Link 
               href="/projects" 
-              className="group flex items-center justify-center gap-3 bg-accent text-dark px-8 py-4 md:px-10 md:py-5 uppercase font-bold tracking-wider text-xs md:text-sm hover:bg-white hover:text-dark transition-all duration-300 w-full sm:w-auto text-center"
+              className="bg-[#FF5E14] hover:bg-[#e04f0d] text-white px-8 py-4 md:py-3.5 rounded-full font-semibold transition-colors duration-300 text-center text-base shadow-lg"
             >
-              Our Portfolio <FiArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+              Start your project
             </Link>
             
             <Link 
-              href="/contact" 
-              className="flex items-center justify-center bg-transparent border border-white/30 text-white px-8 py-4 md:px-10 md:py-5 uppercase font-bold tracking-wider text-xs md:text-sm hover:bg-white hover:text-dark transition-all duration-300 w-full sm:w-auto text-center"
+              href="tel:+1234567890" 
+              className="group flex items-center justify-center gap-2 bg-white/10 border border-white/50 text-white px-8 py-4 md:py-3.5 rounded-full font-semibold hover:bg-white hover:text-black transition-all duration-300 text-base backdrop-blur-md"
             >
-              Get A Quote
+              <FiPhone className="text-white group-hover:text-black transition-colors" size={18} />
+              Call now
             </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* BOTTOM TRUSTED BY LOGOS BAR */}
+      <div 
+        ref={bottomBarRef}
+        className="absolute bottom-0 left-0 w-full z-20 bg-linear-to-t from-black/90 to-transparent pt-16 pb-6 md:pb-8 pointer-events-none"
+      >
+        <div className="container mx-auto px-6 md:px-12">
+          <p className="text-center text-white/60 text-xs md:text-sm font-semibold uppercase tracking-widest mb-4 md:mb-6">
+            Trusted by 120+ Businesses
+          </p>
+          
+          {/* FIX 4: Hide extra logos on small mobile screens to prevent wrapping and breaking */}
+          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-16 lg:gap-24 opacity-80">
+            <span className="text-white font-bold text-base md:text-lg tracking-widest italic">Logoipsum</span>
+            <span className="text-white font-bold text-base md:text-lg flex items-center gap-2">
+              <span className="text-xl">⬡</span> ATMANTARA
+            </span>
+            {/* Hidden on mobile, shows on sm and up */}
+            <span className="text-white font-bold text-base md:text-lg tracking-widest italic hidden sm:block">Logoipsum</span>
+            <span className="text-white font-bold text-base md:text-lg hidden md:flex items-center gap-2">
+              <span className="text-xl">⬡</span> ATMANTARA
+            </span>
           </div>
         </div>
       </div>
