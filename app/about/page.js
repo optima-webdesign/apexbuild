@@ -73,9 +73,9 @@ export default function AboutPage() {
   ];
 
   const team = [
-    { name: "Vikram Mehta", role: "Founder & CEO", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop" },
-    { name: "Ananya Patel", role: "Chief Architect", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop" },
-    { name: "Rohan Desai", role: "Head of Engineering", image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" }
+    { name: "Vikram Mehta", role: "Founder & CEO", image: "/vikram.png" },
+    { name: "Ananya Patel", role: "Chief Architect", image: "/ananya.png" },
+    { name: "Rohan Desai", role: "Head of Engineering", image: "/rohan.png" }
   ];
 
   return (

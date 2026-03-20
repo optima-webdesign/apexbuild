@@ -137,7 +137,7 @@ export default function ContactPage() {
               <div className="flex flex-col gap-5 pl-13">
                 <div>
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Phone</p>
-                  <a href="tel:+919876543210" className="text-gray-900 text-lg font-bold hover:text-[#FF5E14] transition-colors">+91 98765 43210</a>
+                  <a href="tel:+919428884809" className="text-gray-900 text-lg font-bold hover:text-[#FF5E14] transition-colors">+91 94288 84809</a>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Email</p>
